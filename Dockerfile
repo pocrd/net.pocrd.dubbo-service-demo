@@ -10,5 +10,4 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # 选择service模块的jar包作为启动目标
-# 假设service模块的artifactId是 'service'
-ENTRYPOINT ["java", "-cp", "/app/service/target/classes:/app/service/target/lib/*", "com.pocrd.service_demo.service.DubboTripleServiceApplication"]
+ENTRYPOINT ["java", "-jar", "/app/service/target/service-1.0.0.jar"]
