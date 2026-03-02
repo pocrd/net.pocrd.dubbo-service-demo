@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/temurin/eclipse-temurin:21-jdk-alpine
+FROM registry.cn-hangzhou.aliyuncs.com/public/dragonwell:21-jdk-anolis
 
 # 设置工作目录
 WORKDIR /app
