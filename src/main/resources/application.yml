@@ -15,7 +15,7 @@ dubbo:
     qos-enable: true
     qos-accept-foreign-ip: true
   registry:
-    address: nacos://nacos:8848
+    address: nacos://nacos-service:8848  # 修改为实际的Nacos服务网络名称
     # Additional parameters for Nacos
     parameters:
       namespace: public
@@ -30,7 +30,7 @@ dubbo:
     timeout: 60000
     retries: 0
   metadata-report:
-    address: nacos://nacos:8848
+    address: nacos://nacos-service:8848  # 修改为实际的Nacos服务网络名称
 
 # Logging configuration
 logging:
