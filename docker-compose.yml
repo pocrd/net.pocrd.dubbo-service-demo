@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  nacos:
+    image: higress/nacos:latest
+    container_name: nacos
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=nacos-mysql
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=nacos
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      - nacos-mysql
+    networks:
+      - dubbo-network
+
+  nacos-mysql:
+    image: mysql:8.0
+    container_name: nacos-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nacos_config
+      MYSQL_USER: nacos
+      MYSQL_PASSWORD: nacos
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - dubbo-network
+
+  dubbo-service:
+    build: .
+    container_name: dubbo-triple-service
+    ports:
+      - "9090:9090"
+      - "50051:50051"
+    environment:
+      - DUBBO_REGISTRY_ADDRESS=nacos://nacos:8848
+      - SERVER_PORT=9090
+    depends_on:
+      - nacos
+    networks:
+      - dubbo-network
+
+volumes:
+  mysql_data:
+
+networks:
+  dubbo-network:
+    driver: bridge
