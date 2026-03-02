@@ -1,13 +1,14 @@
-FROM eclipse-temurin:21-jdk-alpine
+FROM registry.cn-hangzhou.aliyuncs.com/temurin/eclipse-temurin:21-jdk-alpine
 
-# Set working directory
+# 设置工作目录
 WORKDIR /app
 
-# Copy the jar file to the container
-COPY target/dubbo-triple-nacos-service-1.0.0.jar app.jar
+# 复制整个项目源码到容器中
+COPY . .
 
-# Expose ports
-EXPOSE 9090 50051
+# 使用Maven编译整个多模块项目
+RUN mvn clean package -DskipTests
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# 选择service模块的jar包作为启动目标
+# 假设service模块的artifactId是 'service'
+ENTRYPOINT ["java", "-cp", "/app/service/target/classes:/app/service/target/lib/*", "com.pocrd.service_demo.service.DubboTripleServiceApplication"]
