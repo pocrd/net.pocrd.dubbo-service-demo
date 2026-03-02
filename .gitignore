@@ -2,3 +2,5 @@
 .env
 .tool-versions
 .qoder
+.vscode/
+target/
