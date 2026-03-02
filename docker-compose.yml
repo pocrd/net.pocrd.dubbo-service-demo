@@ -18,7 +18,7 @@ services:
     depends_on:
       - nacos-mysql
     networks:
-      - dubbo-network
+      - higress-net
 
   nacos-mysql:
     image: mysql:8.0
@@ -33,7 +33,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - dubbo-network
+      - higress-net
 
   dubbo-service:
     build: .
@@ -47,11 +47,11 @@ services:
     depends_on:
       - nacos
     networks:
-      - dubbo-network
+      - higress-net
 
 volumes:
   mysql_data:
 
 networks:
-  dubbo-network:
+  higress-net:
     driver: bridge
