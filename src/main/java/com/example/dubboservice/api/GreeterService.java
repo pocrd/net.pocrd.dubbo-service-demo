@@ -1,4 +1,4 @@
-package com.example.dubboservice.api;
+package com.pocrd.service_demo.api; // 更新包名
 
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.rpc.RpcContext;

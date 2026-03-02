@@ -1,4 +1,4 @@
-package com.example.dubboservice;
+package com.pocrd.service_demo.service; // 更新包名
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
