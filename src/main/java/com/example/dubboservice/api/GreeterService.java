@@ -7,8 +7,12 @@ import org.apache.dubbo.rpc.RpcContext;
  * Example service interface definition
  * Using Dubbo Triple protocol
  */
+public interface GreeterService {
+    String greet(String name);
+}
+
 @DubboService(version = "1.0.0", group = "default")
-public class GreeterServiceImpl implements GreeterService {
+class GreeterServiceImpl implements GreeterService {
 
     @Override
     public String greet(String name) {
