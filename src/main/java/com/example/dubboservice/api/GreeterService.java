@@ -1,6 +1,5 @@
 package com.example.dubboservice.api;
 
-import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.rpc.RpcContext;
 
