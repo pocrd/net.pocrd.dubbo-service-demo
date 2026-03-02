@@ -5,22 +5,63 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.pocrd</groupId>
-        <artifactId>service-demo</artifactId>
-        <version>1.0.0</version>
-    </parent>
+    <groupId>com.pocrd</groupId>
+    <artifactId>service-demo</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging> <!-- 父项目打包方式为pom -->
 
-    <artifactId>api</artifactId>
-    <packaging>jar</packaging>
+    <name>Service Demo Parent</name>
+    <description>A multi-module project for Dubbo Triple service with Nacos</description>
 
-    <name>Service Demo API</name>
-    <description>Dubbo service API definitions</description>
+    <modules>
+        <module>api</module>
+        <module>service</module>
+        <module>dao</module>
+    </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo</artifactId>
-        </dependency>
-    </dependencies>
+    <properties>
+        <java.version>21</java.version>
+        <dubbo.version>3.3.0</dubbo.version>
+        <nacos-client.version>2.3.0</nacos-client.version>
+        <protobuf-java.version>3.21.12</protobuf-java.version>
+        <spring-boot.version>3.4.5</spring-boot.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- 父项目不包含具体依赖，依赖在各自的子模块中定义 -->
+    <!-- 定义统一的版本管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <!-- 或其他兼容版本 -->
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
