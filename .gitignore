@@ -1,4 +1,5 @@
 .aider*
+.mvn
 .env
 .tool-versions
 .qoder

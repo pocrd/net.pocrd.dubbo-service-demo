@@ -1,16 +1,19 @@
 services:
   dubbo-service:
     build: .
-    container_name: dubbo-triple-service
+    container_name: dubbo-demo-service
     ports:
       - "9090:9090"
       - "50051:50051"
     environment:
-      - DUBBO_REGISTRY_ADDRESS=nacos://nacos:8848
+      - DUBBO_REGISTRY_ADDRESS=nacos://nacos-server:8848
+      - DUBBO_CONFIG_CENTER=nacos://nacos-server:8848
+      - DUBBO_METADATA_REPORT_ADDRESS=nacos://nacos-server:8848
       - SERVER_PORT=9090
     networks:
-      - higress-net
+      - higress_higress-net  # 连接到Nacos和Higress所在的网络
+    restart: unless-stopped
 
 networks:
-  higress-net:
-    driver: bridge
+  higress_higress-net:
+    external: true  # 使用已存在的网络

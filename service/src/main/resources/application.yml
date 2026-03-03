@@ -5,7 +5,7 @@ server:
 # Spring configuration
 spring:
   application:
-    name: dubbo-triple-service
+    name: dubbo-demo-service
 
 # Dubbo configuration
 dubbo:
