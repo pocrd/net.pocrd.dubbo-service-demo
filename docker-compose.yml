@@ -1,6 +1,8 @@
 services:
   dubbo-service:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: dubbo-demo-service
     ports:
       - "9090:9090"
@@ -11,8 +13,15 @@ services:
       - DUBBO_METADATA_REPORT_ADDRESS=nacos://nacos-server:8848
       - SERVER_PORT=9090
     networks:
-      - higress_higress-net  # 连接到Nacos和Higress所在的网络
+      - higress_higress-net  # 连接到 Nacos 和 Higress 所在的网络
     restart: unless-stopped
+    volumes:
+      # 挂载 Maven 本地仓库，加速依赖下载
+      - maven-repo:/root/.m2
+
+volumes:
+  maven-repo:
+    driver: local
 
 networks:
   higress_higress-net:
