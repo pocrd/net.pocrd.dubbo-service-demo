@@ -27,10 +27,8 @@ public class GreeterServiceInternalTest {
         configManager = new TestConfigManager();
         configManager.init();
         
-        // 获取内部服务接口（仅用于 Dubbo RPC 模式）
-        if (configManager.isDubboMode()) {
-            internalService = configManager.getGreeterServiceInternal();
-        }
+        // 获取内部服务接口
+        internalService = configManager.getGreeterServiceInternal();
     }
     
     /**
@@ -39,7 +37,6 @@ public class GreeterServiceInternalTest {
     @Test
     @DisplayName("Dubbo RPC 模式 - greetInternal 测试")
     void testGreetInternal() {
-        org.junit.jupiter.api.Assumptions.assumeTrue(configManager.isDubboMode());
         assertNotNull(internalService);
         
         String name = "InternalUser";
@@ -59,7 +56,6 @@ public class GreeterServiceInternalTest {
     @Test
     @DisplayName("Dubbo RPC 模式 - greetBatch 测试")
     void testGreetBatch() {
-        org.junit.jupiter.api.Assumptions.assumeTrue(configManager.isDubboMode());
         assertNotNull(internalService);
         
         List<String> names = Arrays.asList("User1", "User2", "User3");
@@ -84,7 +80,6 @@ public class GreeterServiceInternalTest {
     @Test
     @DisplayName("Dubbo RPC 模式 - healthCheck 测试")
     void testHealthCheck() {
-        org.junit.jupiter.api.Assumptions.assumeTrue(configManager.isDubboMode());
         assertNotNull(internalService);
         
         boolean isHealthy = internalService.healthCheck();
@@ -101,7 +96,6 @@ public class GreeterServiceInternalTest {
     @Test
     @DisplayName("Dubbo RPC 模式 - getServiceInfo 测试")
     void testGetServiceInfo() {
-        org.junit.jupiter.api.Assumptions.assumeTrue(configManager.isDubboMode());
         assertNotNull(internalService);
         
         ServiceInfo serviceInfo = internalService.getServiceInfo();

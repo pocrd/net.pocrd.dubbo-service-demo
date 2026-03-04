@@ -1,8 +1,6 @@
 package com.pocrd.service_demo.client;
 
 import com.pocrd.service_demo.api.GreeterServiceHttpExport;
-import org.apache.dubbo.config.ReferenceConfig;
-import org.apache.dubbo.config.bootstrap.DubboBootstrap;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,31 +18,24 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GreeterServiceTest {
     
     private static HttpClientUtils httpClient;
+    private static TestConfigManager configManager;
     private static GreeterServiceHttpExport dubboService;
-    private static DubboBootstrap dubboBootstrap;
     
     @BeforeAll
     static void setUp() {
         // 初始化 HTTP 客户端（连接 Higress 网关，端口 80）
         httpClient = new HttpClientUtils("http://localhost:80");
         
-        // 初始化 Dubbo 客户端（直连 50052 端口，Fury 序列化）
-        ReferenceConfig<GreeterServiceHttpExport> reference = new ReferenceConfig<>();
-        reference.setInterface(GreeterServiceHttpExport.class);
-        reference.setUrl("dubbo://localhost:50052");
-        
-        dubboBootstrap = DubboBootstrap.getInstance()
-            .application("greeter-test-consumer")
-            .reference(reference)
-            .start();
-        
-        dubboService = reference.get();
+        // 初始化 Dubbo 客户端（通过 TestConfigManager）
+        configManager = new TestConfigManager();
+        configManager.init();
+        dubboService = configManager.getGreeterService();
     }
     
     @AfterAll
     static void tearDown() {
-        if (dubboBootstrap != null) {
-            dubboBootstrap.stop();
+        if (configManager != null) {
+            configManager.destroy();
         }
     }
     

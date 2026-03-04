@@ -1,6 +1,6 @@
 package com.pocrd.service_demo.client;
 
-import com.pocrd.service_demo.api.GreeterServiceInternal;
+import com.pocrd.service_demo.api.GreeterServiceStreamInternal;
 import org.apache.dubbo.common.stream.StreamObserver;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,17 +29,17 @@ import java.util.concurrent.TimeUnit;
 public class GreeterServiceStreamingTest {
     
     private static TestConfigManager configManager;
-    private static GreeterServiceInternal internalService;
+    private static GreeterServiceStreamInternal streamService;
     
     @BeforeAll
     static void setUp() {
+        // 流式接口使用 Triple 协议（基于 gRPC，天然支持流式）
+        System.setProperty("dubbo.url", "tri://localhost:50051");
         configManager = new TestConfigManager();
         configManager.init();
         
-        // 获取内部服务接口（仅用于 Dubbo RPC 模式）
-        if (configManager.isDubboMode()) {
-            internalService = configManager.getGreeterServiceInternal();
-        }
+        // 获取流式服务接口
+        streamService = configManager.getGreeterServiceStreamInternal();
     }
     
     /**
@@ -49,10 +49,7 @@ public class GreeterServiceStreamingTest {
     @Test
     @DisplayName("Dubbo RPC 模式 - 双向流式交互测试")
     void testGreetInteractive() throws Exception {
-        // 双向流式必须使用 Dubbo RPC 模式
-        org.junit.jupiter.api.Assumptions.assumeTrue(configManager.isDubboMode());
-        
-        assertNotNull(internalService);
+        assertNotNull(streamService);
         
         // 用于存储服务端返回的消息
         List<String> responses = new ArrayList<>();
@@ -82,7 +79,7 @@ public class GreeterServiceStreamingTest {
         };
         
         // 获取请求观察者（用于向服务端发送消息）
-        StreamObserver<String> requestObserver = internalService.greetInteractive(responseObserver);
+        StreamObserver<String> requestObserver = streamService.greetInteractive(responseObserver);
         
         // 发送多个名字到服务端
         String[] names = {"Alice", "Bob", "Charlie", "David", "Eve"};

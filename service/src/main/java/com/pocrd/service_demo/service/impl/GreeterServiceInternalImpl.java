@@ -1,13 +1,13 @@
 package com.pocrd.service_demo.service.impl;
 
 import com.pocrd.service_demo.api.GreeterServiceInternal;
+import com.pocrd.service_demo.api.GreeterServiceStreamInternal;
 import com.pocrd.service_demo.api.entity.ServiceInfo;
 import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.rpc.RpcContext;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * 使用 Dubbo 原生 RPC 协议（端口 50052）进行高效内部通信
  */
 @DubboService(version = "1.0.0", group = "internal", protocol = "dubbo")
-public class GreeterServiceInternalImpl implements GreeterServiceInternal {
+public class GreeterServiceInternalImpl implements GreeterServiceInternal, GreeterServiceStreamInternal {
     
     // 模拟服务启动时间
     private final long startTime = System.currentTimeMillis();
