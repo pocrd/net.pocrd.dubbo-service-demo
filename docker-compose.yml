@@ -12,6 +12,10 @@ services:
       - DUBBO_CONFIG_CENTER=nacos://nacos-server:8848
       - DUBBO_METADATA_REPORT_ADDRESS=nacos://nacos-server:8848
       - SERVER_PORT=9090
+      # 强制 Dubbo 注册时使用宿主机 IP，而非容器内网 IP
+      # 这样本地测试客户端才能通过 Nacos 发现并直连服务
+      - DUBBO_IP_TO_REGISTRY=host-gateway
+      - DUBBO_IP_TO_BIND=0.0.0.0
     networks:
       - higress_higress-net  # 连接到 Nacos 和 Higress 所在的网络
     restart: unless-stopped

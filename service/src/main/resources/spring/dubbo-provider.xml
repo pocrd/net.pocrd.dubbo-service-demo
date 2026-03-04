@@ -22,7 +22,16 @@
                    version="1.0.0" 
                    group="default" />
 
-    <!-- 和本地bean一样实现服务 -->
+    <!-- 暴露内部服务接口（仅供内部 Dubbo RPC 调用，不通过 Higress 网关暴露） -->
+    <dubbo:service interface="com.pocrd.service_demo.api.GreeterServiceInternal" 
+                   ref="greeterServiceInternal" 
+                   version="1.0.0" 
+                   group="internal" />
+
+    <!-- HttpExport 实现 -->
     <bean id="greeterService" class="com.pocrd.service_demo.service.impl.GreeterServiceHttpExportImpl" />
+
+    <!-- Internal 实现 -->
+    <bean id="greeterServiceInternal" class="com.pocrd.service_demo.service.impl.GreeterServiceInternalImpl" />
 
 </beans>

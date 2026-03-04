@@ -5,6 +5,7 @@ import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.bootstrap.DubboBootstrap;
 import com.pocrd.service_demo.api.GreeterServiceHttpExport;
+import com.pocrd.service_demo.api.GreeterServiceInternal;
 
 /**
  * 测试配置管理器
@@ -21,6 +22,7 @@ public class TestConfigManager {
     private static final String NACOS_ADDRESS = System.getProperty("nacos.address", "nacos://localhost:8848");
     
     private GreeterServiceHttpExport greeterService;
+    private GreeterServiceInternal greeterServiceInternal;
     private boolean initialized = false;
     
     /**
@@ -58,45 +60,44 @@ public class TestConfigManager {
     
     /**
      * 初始化 Dubbo RPC 客户端
+     * 直连模式：跳过注册中心，直接通过 DUBBO_URL 连接服务
      */
     private void initDubboClient() {
-        System.out.println("使用 Dubbo RPC 模式直接调用服务");
+        System.out.println("使用 Dubbo RPC 直连模式");
         System.out.println("Dubbo 服务地址：" + DUBBO_URL);
-        System.out.println("Nacos 地址：" + NACOS_ADDRESS);
-        
-        // 解析 Dubbo 地址
-        String[] parts = DUBBO_URL.replace("tri://", "").split(":");
-        String host = parts[0];
-        int port = Integer.parseInt(parts[1]);
-        
-        // 解析 Nacos 地址
-        String nacosHost = NACOS_ADDRESS.replace("nacos://", "").split(":")[0];
-        int nacosPort = Integer.parseInt(NACOS_ADDRESS.replace("nacos://", "").split(":")[1]);
         
         // 配置 Dubbo Application
         ApplicationConfig applicationConfig = new ApplicationConfig("client-test-consumer");
         applicationConfig.setQosEnable(false);
         
-        // 配置注册中心
-        RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setAddress(NACOS_ADDRESS);
-        registryConfig.setProtocol("nacos");
+        // 使用直连注册中心（N/A，跳过服务发现）
+        RegistryConfig registryConfig = new RegistryConfig("N/A");
         
-        // 配置 Reference
+        // 配置 HttpExport 服务 Reference（直连）
         ReferenceConfig<GreeterServiceHttpExport> referenceConfig = new ReferenceConfig<>();
         referenceConfig.setInterface(GreeterServiceHttpExport.class);
-        referenceConfig.setProtocol("tri");
-        referenceConfig.setRegistry(registryConfig);
+        referenceConfig.setUrl(DUBBO_URL);
+        referenceConfig.setVersion("1.0.0");
+        referenceConfig.setGroup("default");
+        
+        // 配置 Internal 服务 Reference（直连）
+        ReferenceConfig<GreeterServiceInternal> internalReferenceConfig = new ReferenceConfig<>();
+        internalReferenceConfig.setInterface(GreeterServiceInternal.class);
+        internalReferenceConfig.setUrl(DUBBO_URL);
+        internalReferenceConfig.setVersion("1.0.0");
+        internalReferenceConfig.setGroup("internal");
         
         // 启动 Dubbo
         DubboBootstrap.getInstance()
                 .application(applicationConfig)
                 .registry(registryConfig)
                 .reference(referenceConfig)
+                .reference(internalReferenceConfig)
                 .start();
         
         // 获取服务代理
         this.greeterService = referenceConfig.get();
+        this.greeterServiceInternal = internalReferenceConfig.get();
         
         System.out.println("Dubbo 客户端初始化完成");
     }
@@ -115,6 +116,23 @@ public class TestConfigManager {
             return greeterService;
         } else {
             throw new IllegalStateException("HTTP 模式下无法直接获取 GreeterService，请使用 HttpClientUtils");
+        }
+    }
+    
+    /**
+     * 获取 GreeterServiceInternal 实例
+     * 
+     * @return GreeterServiceInternal 实例（仅在 Dubbo RPC 模式下可用）
+     */
+    public GreeterServiceInternal getGreeterServiceInternal() {
+        if (!initialized) {
+            init();
+        }
+        
+        if ("dubbo".equalsIgnoreCase(TEST_MODE)) {
+            return greeterServiceInternal;
+        } else {
+            throw new IllegalStateException("HTTP 模式下无法直接获取 GreeterServiceInternal，请使用 Dubbo RPC 模式");
         }
     }
     

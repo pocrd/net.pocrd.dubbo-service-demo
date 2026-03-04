@@ -1,6 +1,8 @@
 package com.pocrd.service_demo.service.impl;
 
 import com.pocrd.service_demo.api.GreeterServiceInternal;
+import com.pocrd.service_demo.api.entity.ServiceInfo;
+import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.rpc.RpcContext;
 
@@ -72,6 +74,29 @@ public class GreeterServiceInternalImpl implements GreeterServiceInternal {
             uptime,
             requestCount
         );
+    }
+    
+    @Override
+    public StreamObserver<String> greetInteractive(StreamObserver<String> responseObserver) {
+        return new StreamObserver<String>() {
+            @Override
+            public void onNext(String name) {
+                String response = String.format("[Internal Interactive] Greeting for: %s, received at: %s, from: %s", 
+                        name, System.currentTimeMillis(), RpcContext.getContext().getLocalAddressString());
+                responseObserver.onNext(response);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.err.println("Error in interactive greeting: " + throwable.getMessage());
+                responseObserver.onError(throwable);
+            }
+
+            @Override
+            public void onCompleted() {
+                responseObserver.onCompleted();
+            }
+        };
     }
     
     /**

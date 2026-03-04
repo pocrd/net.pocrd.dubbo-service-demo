@@ -26,10 +26,4 @@ public interface GreeterServiceHttpExport {
      */
     void greetStream(String name, StreamObserver<String> observer);
     
-    /**
-     * Bidirectional streaming - interactive greeting
-     * @param observer the stream observer for bidirectional communication
-     * @return the stream observer for sending responses
-     */
-    StreamObserver<String> greetInteractive(StreamObserver<String> observer);
 }

@@ -1,5 +1,8 @@
 package com.pocrd.service_demo.api;
 
+import com.pocrd.service_demo.api.entity.ServiceInfo;
+import org.apache.dubbo.common.stream.StreamObserver;
+
 /**
  * Greeter service interface definition - Internal Dubbo RPC Only
  * 
@@ -35,53 +38,9 @@ public interface GreeterServiceInternal {
     ServiceInfo getServiceInfo();
     
     /**
-     * 服务信息数据类
+     * 双向流式交互问候 - 内部服务间实时通信
+     * @param observer 流式响应观察者
+     * @return 流式请求观察者
      */
-    class ServiceInfo {
-        private String serviceName;
-        private String version;
-        private long uptime;
-        private int requestCount;
-        
-        public ServiceInfo() {}
-        
-        public ServiceInfo(String serviceName, String version, long uptime, int requestCount) {
-            this.serviceName = serviceName;
-            this.version = version;
-            this.uptime = uptime;
-            this.requestCount = requestCount;
-        }
-        
-        public String getServiceName() {
-            return serviceName;
-        }
-        
-        public void setServiceName(String serviceName) {
-            this.serviceName = serviceName;
-        }
-        
-        public String getVersion() {
-            return version;
-        }
-        
-        public void setVersion(String version) {
-            this.version = version;
-        }
-        
-        public long getUptime() {
-            return uptime;
-        }
-        
-        public void setUptime(long uptime) {
-            this.uptime = uptime;
-        }
-        
-        public int getRequestCount() {
-            return requestCount;
-        }
-        
-        public void setRequestCount(int requestCount) {
-            this.requestCount = requestCount;
-        }
-    }
+    StreamObserver<String> greetInteractive(StreamObserver<String> observer);
 }

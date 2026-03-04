@@ -17,6 +17,14 @@
     <name>Service Demo Client</name>
     <description>Dubbo Service Integration Test Client</description>
 
+    <!-- 默认属性，可通过 profile 覆盖 -->
+    <properties>
+        <test.mode>http</test.mode>
+        <higress.url>http://localhost:80</higress.url>
+        <dubbo.url>tri://localhost:50051</dubbo.url>
+        <nacos.address>nacos://localhost:8848</nacos.address>
+    </properties>
+
     <dependencies>
         <!-- API 模块 - 必须依赖 -->
         <dependency>
@@ -97,14 +105,14 @@
                 <version>3.5.2</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <!-- 默认测试模式：HTTP -->
-                        <test.mode>http</test.mode>
+                        <!-- 测试模式（可通过 -Pdubbo-test 切换为 dubbo）-->
+                        <test.mode>${test.mode}</test.mode>
                         <!-- Higress 网关地址 -->
-                        <higress.url>http://localhost:80</higress.url>
+                        <higress.url>${higress.url}</higress.url>
                         <!-- Dubbo 服务地址 -->
-                        <dubbo.url>tri://localhost:50051</dubbo.url>
+                        <dubbo.url>${dubbo.url}</dubbo.url>
                         <!-- Nacos 地址 -->
-                        <nacos.address>nacos://localhost:8848</nacos.address>
+                        <nacos.address>${nacos.address}</nacos.address>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

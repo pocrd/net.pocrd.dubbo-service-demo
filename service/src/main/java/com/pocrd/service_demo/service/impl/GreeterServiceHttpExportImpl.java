@@ -61,26 +61,4 @@ public class GreeterServiceHttpExportImpl implements GreeterServiceHttpExport {
         }
     }
 
-    @Override
-    public StreamObserver<String> greetInteractive(StreamObserver<String> responseObserver) {
-        return new StreamObserver<String>() {
-            @Override
-            public void onNext(String name) {
-                String response = String.format("Interactive greeting for: %s, received at: %s, from: %s", 
-                        name, System.currentTimeMillis(), RpcContext.getContext().getLocalAddressString());
-                responseObserver.onNext(response);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                System.err.println("Error in interactive greeting: " + throwable.getMessage());
-                responseObserver.onError(throwable);
-            }
-
-            @Override
-            public void onCompleted() {
-                responseObserver.onCompleted();
-            }
-        };
-    }
 }
