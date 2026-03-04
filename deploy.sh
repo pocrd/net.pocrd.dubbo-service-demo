@@ -86,7 +86,8 @@ build() {
 # 构建 Docker 镜像
 docker_build() {
     info "开始构建 Docker 镜像..."
-    docker-compose -f "$COMPOSE_FILE" build
+    # 强制重新构建，确保使用最新的 fat jar
+    docker-compose -f "$COMPOSE_FILE" build --no-cache
     success "Docker 镜像构建完成"
 }
 

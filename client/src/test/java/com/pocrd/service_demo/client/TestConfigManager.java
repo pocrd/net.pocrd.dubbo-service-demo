@@ -79,6 +79,7 @@ public class TestConfigManager {
         referenceConfig.setUrl(DUBBO_URL);
         referenceConfig.setVersion("1.0.0");
         referenceConfig.setGroup("default");
+
         
         // 配置 Internal 服务 Reference（直连）
         ReferenceConfig<GreeterServiceInternal> internalReferenceConfig = new ReferenceConfig<>();
@@ -86,6 +87,7 @@ public class TestConfigManager {
         internalReferenceConfig.setUrl(DUBBO_URL);
         internalReferenceConfig.setVersion("1.0.0");
         internalReferenceConfig.setGroup("internal");
+
         
         // 启动 Dubbo
         DubboBootstrap.getInstance()

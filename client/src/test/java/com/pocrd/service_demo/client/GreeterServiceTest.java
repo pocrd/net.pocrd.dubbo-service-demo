@@ -25,6 +25,9 @@ public class GreeterServiceTest {
     
     /**
      * HTTP 模式测试 - 通过 Higress 网关调用
+     * 
+     * 【重要说明】greet 接口返回的是纯文本字符串，不是 JSON
+     * 例如："Hello World, from 172.18.0.4:37768 (to 172.18.0.2:50051)"
      */
     @Test
     @DisplayName("HTTP 模式 - Greet 测试")
@@ -41,15 +44,9 @@ public class GreeterServiceTest {
         assertNotNull(response);
         System.out.println("HTTP 模式响应：" + response);
         
-        // 解析 JSON 响应
-        var jsonNode = httpClient.parseJson(response);
-        assertTrue(jsonNode.has("message") || jsonNode.has("greeting"));
-        
-        String message = jsonNode.has("message") ? 
-            jsonNode.get("message").asText() : 
-            jsonNode.get("greeting").asText();
-        assertTrue(message.contains("World"));
-        System.out.println("✓ HTTP 模式测试通过：" + message);
+        // greet 接口返回纯文本字符串，直接验证是否包含 "World"
+        assertTrue(response.contains("World"), "响应应该包含 'World'");
+        System.out.println("✓ HTTP 模式测试通过：" + response);
     }
     
     /**
