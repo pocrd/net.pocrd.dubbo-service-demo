@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.pocrd</groupId>
+        <artifactId>service-demo</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>service-demo-client</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Service Demo Client</name>
+    <description>Dubbo Service Integration Test Client</description>
+
+    <dependencies>
+        <!-- API 模块 - 必须依赖 -->
+        <dependency>
+            <groupId>com.pocrd</groupId>
+            <artifactId>service-demo-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- Dubbo Triple 协议支持（用于 HTTP 模式） -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-rpc-triple</artifactId>
+            <version>${dubbo.version}</version>
+        </dependency>
+
+        <!-- Nacos 注册中心客户端 -->
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+        </dependency>
+
+        <!-- HTTP 客户端 - 用于调用 Higress 网关 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+
+        <!-- JSON 处理 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.3</version>
+        </dependency>
+
+        <!-- Spring Context for Dubbo -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- SLF4J 日志 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+
+        <!-- JUnit 5 测试框架 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Test 支持 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- Surefire 插件配置，支持两种测试模式 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- 默认测试模式：HTTP -->
+                        <test.mode>http</test.mode>
+                        <!-- Higress 网关地址 -->
+                        <higress.url>http://localhost:80</higress.url>
+                        <!-- Dubbo 服务地址 -->
+                        <dubbo.url>tri://localhost:50051</dubbo.url>
+                        <!-- Nacos 地址 -->
+                        <nacos.address>nacos://localhost:8848</nacos.address>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- HTTP 模式：通过 Higress 网关测试 -->
+        <profile>
+            <id>http-test</id>
+            <properties>
+                <test.mode>http</test.mode>
+            </properties>
+        </profile>
+
+        <!-- Dubbo RPC 模式：直接调用 Dubbo 服务 -->
+        <profile>
+            <id>dubbo-test</id>
+            <properties>
+                <test.mode>dubbo</test.mode>
+            </properties>
+        </profile>
+    </profiles>
+</project>

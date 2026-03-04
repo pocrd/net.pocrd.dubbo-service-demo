@@ -1,13 +1,13 @@
 package com.pocrd.service_demo.service;
 
-import com.pocrd.service_demo.service.impl.GreeterServiceImpl;
+import com.pocrd.service_demo.service.impl.GreeterServiceHttpExportImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GreeterServiceTest {
 
-    private GreeterServiceImpl greeterServiceImpl = new GreeterServiceImpl();
+    private GreeterServiceHttpExportImpl greeterServiceImpl = new GreeterServiceHttpExportImpl();
 
     @Test
     public void testGreet() {

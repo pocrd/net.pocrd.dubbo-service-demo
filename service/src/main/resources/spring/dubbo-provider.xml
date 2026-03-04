@@ -17,12 +17,12 @@
     <dubbo:protocol name="tri" port="50051" />
 
     <!-- 声明需要暴露的服务接口 -->
-    <dubbo:service interface="com.pocrd.service_demo.api.GreeterService" 
+    <dubbo:service interface="com.pocrd.service_demo.api.GreeterServiceHttpExport" 
                    ref="greeterService" 
                    version="1.0.0" 
                    group="default" />
 
     <!-- 和本地bean一样实现服务 -->
-    <bean id="greeterService" class="com.pocrd.service_demo.service.impl.GreeterServiceImpl" />
+    <bean id="greeterService" class="com.pocrd.service_demo.service.impl.GreeterServiceHttpExportImpl" />
 
 </beans>
