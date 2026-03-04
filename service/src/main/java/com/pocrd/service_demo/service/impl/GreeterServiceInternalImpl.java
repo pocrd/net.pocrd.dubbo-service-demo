@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
  * 
  * 此实现类提供仅在内网供其他 Dubbo 服务调用的接口
  * 不会通过 Higress 网关暴露给公网
- * 使用 Dubbo 原生 RPC 协议进行高效内部通信
+ * 使用 Dubbo 原生 RPC 协议（端口 50052）进行高效内部通信
  */
-@DubboService(version = "1.0.0", group = "internal")
+@DubboService(version = "1.0.0", group = "internal", protocol = "dubbo")
 public class GreeterServiceInternalImpl implements GreeterServiceInternal {
     
     // 模拟服务启动时间

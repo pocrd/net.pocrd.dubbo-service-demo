@@ -7,6 +7,7 @@
 - **api**: 服务接口定义模块
 - **service**: 服务实现模块
 - **dao**: 数据访问对象模块
+- **client**: 集成测试模块
 
 ## 功能特性
 
@@ -48,11 +49,14 @@ java -jar service/target/service-demo-service-1.0.0.jar
 注意：此服务依赖于外部的 Nacos 服务。在运行此服务前，请确保 Nacos 服务已在运行。
 
 ```bash
-# 构建并运行
+# 使用部署脚本
+./deploy.sh deploy
+
+# 或手动构建并运行
 docker-compose up --build
 ```
 
-如果 Nacos 和 Higress 服务在独立的容器中运行，请确保它们与本服务在同一个 Docker 网络中。根据您提供的配置，Nacos 和 Higress 服务运行在 `higress-net` 网络中，因此本服务也将连接到该网络。
+注意：此服务依赖于外部的 Nacos 和 Higress 服务。在运行前，请确保它们已在运行并连接到 `higress-net` 网络。
 
 ## 服务接口
 
@@ -67,8 +71,9 @@ docker-compose up --build
 服务配置位于 `service/src/main/resources/application.yml`：
 
 - 服务器端口：9090
-- Dubbo 协议端口：50051 (Triple协议)
-- Nacos 注册地址：nacos-service:8848
+- Triple 协议端口：50051 (Higress 调用，fastjson2 序列化)
+- Dubbo 协议端口：50052 (内部调用，Fury 序列化)
+- Nacos 注册地址：nacos-server:8848
 - 应用名称：dubbo-demo-service
 
 ## 扩展性

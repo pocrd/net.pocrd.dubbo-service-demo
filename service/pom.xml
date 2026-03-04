@@ -103,6 +103,10 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/dubbo/internal/org.apache.dubbo.common.serialize.Serialization</resource>
                                 </transformer>
+                                <!-- 合并 Fury ScopeModelInitializer SPI 文件 -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/dubbo/internal/org.apache.dubbo.rpc.model.ScopeModelInitializer</resource>
+                                </transformer>
                                 <!-- 合并 Services 文件 -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <!-- 设置主类 -->

@@ -10,10 +10,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * GreeterService HTTP Export Implementation
  * 
- * 此实现类提供通过 Higress 网关暴露给公网的 HTTP 接口
- * 使用 Dubbo Triple 协议（兼容 gRPC/HTTP2）
+ * 此实现类暴露到 Triple 协议（端口 50051）：供 Higress 网关 HTTP 调用
  */
-@DubboService(version = "1.0.0", group = "default")
+@DubboService(version = "1.0.0", group = "default", protocol = {"tri", "dubbo"} )
 public class GreeterServiceHttpExportImpl implements GreeterServiceHttpExport {
 
     @Override
