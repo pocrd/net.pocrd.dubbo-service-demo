@@ -11,7 +11,7 @@ import org.apache.dubbo.rpc.RpcContext;
  * 此实现类暴露流式接口到 Triple 协议（端口 50051）
  * 供内部服务间流式通信使用
  */
-@DubboService(version = "1.0.0", group = "internal", protocol = "tri")
+@DubboService(version = "1.0.0", group = "internal", registry = "nacos-internal", protocol = "dubbo")
 public class GreeterServiceStreamInternalImpl implements GreeterServiceStreamInternal {
     
     @Override

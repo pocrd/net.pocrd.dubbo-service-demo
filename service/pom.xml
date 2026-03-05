@@ -52,7 +52,6 @@
         <dependency>
             <groupId>org.apache.dubbo.extensions</groupId>
             <artifactId>dubbo-serialization-fury</artifactId>
-            <version>3.3.1</version>
         </dependency>
         
         <dependency>
@@ -60,14 +59,10 @@
             <artifactId>nacos-client</artifactId>
         </dependency>
         
-        <!-- Logging -->
+        <!-- Logging - Spring Boot Starter 已包含 Logback，无需额外添加 slf4j 实现 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
         </dependency>
         
         <!-- Test dependencies -->
@@ -90,7 +85,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

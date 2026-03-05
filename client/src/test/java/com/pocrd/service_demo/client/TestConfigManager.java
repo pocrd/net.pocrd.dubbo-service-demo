@@ -63,7 +63,7 @@ public class TestConfigManager {
         referenceConfig.setInterface(GreeterServiceHttpExport.class);
         referenceConfig.setUrl(dubboUrl);
         referenceConfig.setVersion("1.0.0");
-        referenceConfig.setGroup("default");
+        referenceConfig.setGroup("public");
 
         
         // 配置 Internal 服务 Reference（直连）
