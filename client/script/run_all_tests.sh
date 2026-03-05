@@ -88,9 +88,8 @@ if [ $bash_failed -eq 0 ]; then
     echo "✅ 所有 Bash 测试通过!"
     echo ""
     echo "测试类说明:"
-    echo "  - GreeterServiceTest: HttpExport 接口的 HTTP/Dubbo 双模式测试"
+    echo "  - GreeterServiceTest: HttpExport 接口的 HTTP 模式测试"
     echo "  - GreeterServiceInternalTest: Internal 接口的 Dubbo RPC 测试"
-    echo "  - GreeterServiceStreamingTest: 双向流式接口测试"
     exit 0
 else
     echo "❌ 部分 Bash 测试失败"

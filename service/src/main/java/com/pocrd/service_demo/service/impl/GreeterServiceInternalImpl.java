@@ -1,7 +1,6 @@
 package com.pocrd.service_demo.service.impl;
 
 import com.pocrd.service_demo.api.GreeterServiceInternal;
-import com.pocrd.service_demo.api.GreeterServiceStreamInternal;
 import com.pocrd.service_demo.api.entity.ServiceInfo;
 import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
  * 使用 Dubbo 原生 RPC 协议（端口 50052）进行高效内部通信
  */
 @DubboService(version = "1.0.0", group = "internal", registry = "nacos-internal", protocol = "dubbo")
-public class GreeterServiceInternalImpl implements GreeterServiceInternal, GreeterServiceStreamInternal {
+public class GreeterServiceInternalImpl implements GreeterServiceInternal {
     
     // 模拟服务启动时间
     private final long startTime = System.currentTimeMillis();
@@ -74,29 +73,6 @@ public class GreeterServiceInternalImpl implements GreeterServiceInternal, Greet
             uptime,
             requestCount
         );
-    }
-    
-    @Override
-    public StreamObserver<String> greetInteractive(StreamObserver<String> responseObserver) {
-        return new StreamObserver<String>() {
-            @Override
-            public void onNext(String name) {
-                String response = String.format("[Internal Interactive] Greeting for: %s, received at: %s, from: %s", 
-                        name, System.currentTimeMillis(), RpcContext.getContext().getLocalAddressString());
-                responseObserver.onNext(response);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                System.err.println("Error in interactive greeting: " + throwable.getMessage());
-                responseObserver.onError(throwable);
-            }
-
-            @Override
-            public void onCompleted() {
-                responseObserver.onCompleted();
-            }
-        };
     }
     
     /**

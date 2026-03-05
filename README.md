@@ -64,7 +64,6 @@ docker-compose up --build
 
 1. **greet(String name)** - 一元调用：简单问候
 2. **greetStream(String name, StreamObserver<String> observer)** - 服务端流：多次问候
-3. **greetInteractive(StreamObserver<String> observer)** - 双向流：交互式问候
 
 ## 配置说明
 

@@ -6,7 +6,6 @@ import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.bootstrap.DubboBootstrap;
 import com.pocrd.service_demo.api.GreeterServiceHttpExport;
 import com.pocrd.service_demo.api.GreeterServiceInternal;
-import com.pocrd.service_demo.api.GreeterServiceStreamInternal;
 
 /**
  * Dubbo RPC 客户端配置管理器
@@ -21,7 +20,6 @@ public class TestConfigManager {
     
     private GreeterServiceHttpExport greeterService;
     private GreeterServiceInternal greeterServiceInternal;
-    private GreeterServiceStreamInternal greeterServiceStreamInternal;
     private boolean initialized = false;
     
     /**
@@ -80,19 +78,8 @@ public class TestConfigManager {
                 .reference(referenceConfig)
                 .reference(internalReferenceConfig);
         
-        // 如果 URL 是 Triple 协议，也配置 Stream 服务
-        if (dubboUrl.startsWith("tri://")) {
-            ReferenceConfig<GreeterServiceStreamInternal> streamReferenceConfig = new ReferenceConfig<>();
-            streamReferenceConfig.setInterface(GreeterServiceStreamInternal.class);
-            streamReferenceConfig.setUrl(dubboUrl);
-            streamReferenceConfig.setVersion("1.0.0");
-            streamReferenceConfig.setGroup("internal");
-            bootstrap.reference(streamReferenceConfig);
-            bootstrap.start();
-            this.greeterServiceStreamInternal = streamReferenceConfig.get();
-        } else {
-            bootstrap.start();
-        }
+        // 启动 Dubbo
+        bootstrap.start();
         
         // 获取服务代理
         this.greeterService = referenceConfig.get();
@@ -123,18 +110,6 @@ public class TestConfigManager {
             init();
         }
         return greeterServiceInternal;
-    }
-    
-    /**
-     * 获取 GreeterServiceStreamInternal 实例
-     * 
-     * @return GreeterServiceStreamInternal 实例
-     */
-    public GreeterServiceStreamInternal getGreeterServiceStreamInternal() {
-        if (!initialized) {
-            init();
-        }
-        return greeterServiceStreamInternal;
     }
     
     /**
