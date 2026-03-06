@@ -2,14 +2,13 @@ FROM eclipse-temurin:21
 
 WORKDIR /app
 
-# 复制本地编译的 fat jar
-# 外部依赖已在 Maven 阶段缓存（~/.m2/repository），这里直接复制打包好的 fat jar
-COPY service/target/service-demo-service-1.0.0.jar app.jar
+# 复制编译后的类文件和依赖库
+COPY service/target/classes ./classes
+COPY service/target/lib ./lib
 
 # 暴露 Dubbo 协议端口
 EXPOSE 50051
 EXPOSE 50052
 
-
-# 使用标准 jar 方式启动
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 使用 classpath 方式启动
+ENTRYPOINT ["java", "-cp", "classes:lib/*", "com.pocrd.service_demo.service.ServiceDemoApplication"]

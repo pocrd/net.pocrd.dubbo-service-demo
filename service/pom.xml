@@ -48,7 +48,7 @@
             <version>${dubbo.version}</version>
         </dependency>
         
-        <!-- Fory serialization for JDK Record support -->
+        <!-- Fury serialization for JDK Record support -->
         <dependency>
             <groupId>org.apache.dubbo.extensions</groupId>
             <artifactId>dubbo-serialization-fury</artifactId>
@@ -81,33 +81,33 @@
 
     <build>
         <plugins>
-            <!-- Maven Shade Plugin - 打包 fat jar 并合并 SPI 文件 -->
+            <!-- Maven Jar Plugin - 生成普通 jar 并指定主类 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.pocrd.service_demo.service.ServiceDemoApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            
+            <!-- Maven Dependency Plugin - 复制依赖到 target/lib -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <transformers>
-                                <!-- 合并 Dubbo SPI 扩展文件 -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/dubbo/internal/org.apache.dubbo.common.serialize.Serialization</resource>
-                                </transformer>
-                                <!-- 合并 Fury ScopeModelInitializer SPI 文件 -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/dubbo/internal/org.apache.dubbo.rpc.model.ScopeModelInitializer</resource>
-                                </transformer>
-                                <!-- 合并 Services 文件 -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <!-- 设置主类 -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.pocrd.service_demo.service.ServiceDemoApplication</mainClass>
-                                </transformer>
-                            </transformers>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>runtime</includeScope>
                         </configuration>
                     </execution>
                 </executions>

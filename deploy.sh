@@ -79,15 +79,15 @@ check_env() {
 # 本地编译
 build() {
     info "开始 Maven 编译打包..."
-    mvn clean package -DskipTests -B
+    mvn clean package -pl service -am -DskipTests -B
     success "编译完成"
 }
 
 # 构建 Docker 镜像
 docker_build() {
     info "开始构建 Docker 镜像..."
-    # 强制重新构建，确保使用最新的 fat jar
-    docker-compose -f "$COMPOSE_FILE" build --no-cache
+    # 构建镜像，使用最新的 classes 和 lib
+    docker-compose -f "$COMPOSE_FILE" build
     success "Docker 镜像构建完成"
 }
 
@@ -180,7 +180,7 @@ usage() {
 }
 
 # 主逻辑
-case "${1:-help}" in
+case "${1:-deploy}" in
     build)
         check_env
         build
