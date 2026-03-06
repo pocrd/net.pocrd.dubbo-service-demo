@@ -37,7 +37,7 @@ public class HttpClientUtils {
     public String greet(String name) throws Exception {
         // 使用 URL 查询参数传递参数（解决单参数 String 接口的歧义问题）
         String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
-        String url = baseUrl + "/com.pocrd.service_demo.api.GreeterServiceHttpExport/greet?name=" + encodedName;
+        String url = baseUrl + "/api/com.pocrd.service_demo.api.GreeterServiceHttpExport/greet?name=" + encodedName;
         
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet get = new HttpGet(url);
