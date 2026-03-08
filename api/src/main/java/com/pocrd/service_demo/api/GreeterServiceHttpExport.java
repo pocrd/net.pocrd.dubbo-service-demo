@@ -1,5 +1,9 @@
 package com.pocrd.service_demo.api;
 
+import com.pocrd.service_demo.api.entity.ErrorCode;
+
+import com.pocrd.api_publish_service.sdk.annotation.ApiGroup;
+
 import org.apache.dubbo.common.stream.StreamObserver;
 
 /**
@@ -8,6 +12,7 @@ import org.apache.dubbo.common.stream.StreamObserver;
  * 此接口定义的方法将通过 Higress 网关暴露给公网 HTTP 访问
  * 使用 Dubbo Triple 协议（兼容 gRPC/HTTP2）
  */
+@ApiGroup(name="GreeterService", minCode=100000, maxCode=109999, codeDefine=ErrorCode.class)
 public interface GreeterServiceHttpExport {
     /**
      * Unary call - simple greeting

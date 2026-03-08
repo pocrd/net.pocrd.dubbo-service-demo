@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>service-demo-client</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>Service Demo Client</name>
     <description>Dubbo Service Integration Test Client</description>

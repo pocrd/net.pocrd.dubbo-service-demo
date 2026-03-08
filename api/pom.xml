@@ -21,8 +21,11 @@
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo</artifactId>
-            <version>${dubbo.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.pocrd</groupId>
+            <artifactId>api-publish-service-sdk</artifactId>
+        </dependency>
     </dependencies>
 </project>
