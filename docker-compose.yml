@@ -3,16 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: service-demo-dubbo-service
     container_name: dubbo-demo-service
     ports:
       - "50051:50051"
       - "50052:50052"
     environment:
-      - DUBBO_REGISTRY_ADDRESS=nacos://nacos-server:8848
-      - DUBBO_CONFIG_CENTER=nacos://nacos-server:8848
-      - DUBBO_METADATA_REPORT_ADDRESS=nacos://nacos-server:8848
-    networks:
-      - higress_higress-net  # 连接到 Nacos 和 Higress 所在的网络
+      - DUBBO_REGISTRY_ADDRESS=nacos://host.docker.internal:30848
+      - DUBBO_CONFIG_CENTER=nacos://host.docker.internal:30848
+      - DUBBO_METADATA_REPORT_ADDRESS=nacos://host.docker.internal:30848
     restart: unless-stopped
     deploy:
       resources:
@@ -27,7 +26,3 @@ services:
 volumes:
   maven-repo:
     driver: local
-
-networks:
-  higress_higress-net:
-    external: true  # 使用已存在的网络

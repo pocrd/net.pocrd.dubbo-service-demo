@@ -2,7 +2,6 @@ package com.pocrd.service_demo.service.impl;
 
 import com.pocrd.service_demo.api.GreeterServiceInternal;
 import com.pocrd.service_demo.api.entity.ServiceInfo;
-import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.rpc.RpcContext;
 
@@ -29,8 +28,8 @@ public class GreeterServiceInternalImpl implements GreeterServiceInternal {
     public String greetInternal(String name) {
         incrementRequestCount();
         
-        String remoteAddress = RpcContext.getContext().getRemoteAddressString();
-        String localAddress = RpcContext.getContext().getLocalAddressString();
+        String remoteAddress = RpcContext.getServiceContext().getRemoteAddressString();
+        String localAddress = RpcContext.getServiceContext().getLocalAddressString();
         
         return String.format("[Internal] Hello %s, from %s (to %s)", 
                 name, remoteAddress, localAddress);
@@ -42,7 +41,7 @@ public class GreeterServiceInternalImpl implements GreeterServiceInternal {
         
         return names.stream()
                 .map(name -> {
-                    String remoteAddress = RpcContext.getContext().getRemoteAddressString();
+                    String remoteAddress = RpcContext.getServiceContext().getRemoteAddressString();
                     return String.format("[Internal Batch] Hello %s, from %s", name, remoteAddress);
                 })
                 .collect(Collectors.toList());
