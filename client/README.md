@@ -95,7 +95,7 @@ mvn test -pl client \
 ```bash
 # 测试远程环境的 Higress 网关
 mvn test -pl client \
-  -Dhigress.url=https://api.example.com \
+  -Dhigress.url=https://dapi.example.com \
   -Dtest.mode=http
 
 # 测试远程 Dubbo 集群

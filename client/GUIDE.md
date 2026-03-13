@@ -131,7 +131,7 @@ void testCustomDubboService() {
 ```bash
 # 测试生产环境的 Higress 网关
 mvn test -pl client \
-  -Dhigress.url=https://api.production.com \
+  -Dhigress.url=https://dapi.production.com \
   -Dtest.mode=http
 
 # 测试远程 Dubbo 集群
