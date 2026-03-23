@@ -12,6 +12,7 @@ services:
       - DUBBO_REGISTRY_ADDRESS=nacos://172.24.137.195:30848
       - DUBBO_CONFIG_CENTER=nacos://172.24.137.195:30848
       - DUBBO_METADATA_REPORT_ADDRESS=nacos://172.24.137.195:30848
+      - DUBBO_IP_TO_REGISTRY
       # MySQL database configuration
       - MYSQL_HOST=rm-bp1i047rt28fajm69.mysql.rds.aliyuncs.com
       - MYSQL_PORT=3306

@@ -38,6 +38,19 @@ cd "$SCRIPT_DIR"
 SERVICE_NAME="dubbo-demo-service"
 COMPOSE_FILE="docker-compose.yml"
 
+# 获取宿主机IP地址
+get_host_ip() {
+    # macOS 和 Linux 兼容的方式获取IP
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        ip=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo "127.0.0.1")
+    else
+        # Linux
+        ip=$(hostname -I | awk '{print $1}' 2>/dev/null || ip route get 8.8.8.8 | awk '{print $7; exit}' 2>/dev/null || echo "127.0.0.1")
+    fi
+    echo "$ip"
+}
+
 # 打印信息
 info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -94,7 +107,10 @@ docker_build() {
 # 启动服务
 up() {
     info "启动 Dubbo 服务..."
-    docker compose -f "$COMPOSE_FILE" up -d
+    # 动态获取宿主机IP并设置环境变量
+    HOST_IP=$(get_host_ip)
+    info "检测到宿主机IP: $HOST_IP"
+    DUBBO_IP_TO_REGISTRY="$HOST_IP" docker compose -f "$COMPOSE_FILE" up -d 
     success "服务已启动"
     info "等待服务初始化..."
     sleep 5
@@ -111,7 +127,10 @@ down() {
 # 重启服务
 restart() {
     info "重启 Dubbo 服务..."
-    docker compose -f "$COMPOSE_FILE" restart
+    # 动态获取宿主机IP并设置环境变量
+    HOST_IP=$(get_host_ip)
+    info "检测到宿主机IP: $HOST_IP"
+    DUBBO_IP_TO_REGISTRY="$HOST_IP" docker compose -f "$COMPOSE_FILE" restart
     success "服务已重启"
     info "等待服务初始化..."
     sleep 5

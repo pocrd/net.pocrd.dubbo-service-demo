@@ -16,7 +16,6 @@ public class GreeterServiceTest {
     
     private static HttpClientUtils httpClient;
     private static TestConfigManager configManager;
-    private static GreeterServiceHttpExport dubboService;
     
     @BeforeAll
     static void setUp() {

@@ -28,11 +28,13 @@ dubbo:
   protocols:
     tri:
       name: tri
+      host: ${DUBBO_IP_TO_REGISTRY}
       port: 50051
       serialization: fastjson2
       registry-ids: nacos-public
     dubbo:
       name: dubbo
+      host: ${DUBBO_IP_TO_REGISTRY}
       port: 50052
       serialization: fury
       registry-ids: nacos-internal
