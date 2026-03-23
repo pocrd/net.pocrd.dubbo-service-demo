@@ -26,9 +26,3 @@ services:
         reservations:
           memory: 512M
     volumes:
-      # 挂载 Maven 本地仓库，加速依赖下载
-      - maven-repo:/root/.m2
-
-volumes:
-  maven-repo:
-    driver: local
