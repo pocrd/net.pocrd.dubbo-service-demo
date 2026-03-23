@@ -43,7 +43,7 @@ dubbo:
 
 # MyBatis configuration
 mybatis:
-  mapper-locations: classpath*:mapper/**/*.xml
+  mapper-locations: classpath*:mapper/**/*.xml,classpath*:autogen/mapper/**/*.xml
   type-aliases-package: com.pocrd.service_demo.dao.autogen.entity
 
 # Logging configuration
