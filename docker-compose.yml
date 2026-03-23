@@ -25,4 +25,4 @@ services:
           memory: 1G
         reservations:
           memory: 512M
-    volumes:
+
