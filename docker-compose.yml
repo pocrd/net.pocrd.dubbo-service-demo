@@ -9,9 +9,15 @@ services:
       - "50051:50051"
       - "50052:50052"
     environment:
-      - DUBBO_REGISTRY_ADDRESS=nacos://host.docker.internal:30848
-      - DUBBO_CONFIG_CENTER=nacos://host.docker.internal:30848
-      - DUBBO_METADATA_REPORT_ADDRESS=nacos://host.docker.internal:30848
+      - DUBBO_REGISTRY_ADDRESS=nacos://172.24.137.195:30848
+      - DUBBO_CONFIG_CENTER=nacos://172.24.137.195:30848
+      - DUBBO_METADATA_REPORT_ADDRESS=nacos://172.24.137.195:30848
+      # MySQL database configuration
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=service_demo
+      - MYSQL_USERNAME=demo
+      - MYSQL_PASSWORD=demo123
     restart: unless-stopped
     deploy:
       resources:

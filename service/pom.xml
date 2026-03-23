@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.pocrd</groupId>
             <artifactId>service-demo-api</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- Spring Boot Starter -->
@@ -65,6 +64,12 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         
+        <!-- DAO dependency -->
+        <dependency>
+            <groupId>com.pocrd</groupId>
+            <artifactId>service-demo-dao</artifactId>
+        </dependency>
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -40,7 +40,6 @@
         <dependency>
             <groupId>com.pocrd</groupId>
             <artifactId>service-demo-api</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- Dubbo Triple 协议支持（用于 HTTP 模式） -->

@@ -2,6 +2,11 @@
 spring:
   application:
     name: dubbo-demo-service
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:service_demo}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 # Dubbo configuration
 dubbo:
@@ -36,10 +41,16 @@ dubbo:
   config-center:
     address: ${DUBBO_CONFIG_CENTER:nacos://nacos-server:8848}
 
+# MyBatis configuration
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.pocrd.service_demo.dao.autogen.entity
+
 # Logging configuration
 logging:
   level:
     root: INFO
     org.apache.dubbo: DEBUG
+    com.pocrd.service_demo.dao: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

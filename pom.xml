@@ -97,6 +97,23 @@
                 <artifactId>api-publish-service-sdk</artifactId>
                 <version>${api-publish-service-sdk.version}</version>
             </dependency>
+            
+            <!-- Service Demo Modules -->
+            <dependency>
+                <groupId>com.pocrd</groupId>
+                <artifactId>service-demo-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.pocrd</groupId>
+                <artifactId>service-demo-dao</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.pocrd</groupId>
+                <artifactId>service-demo-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
