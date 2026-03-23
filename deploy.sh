@@ -72,7 +72,7 @@ check_env() {
     check_command java
     check_command mvn
     check_command docker
-    check_command docker-compose
+    check_command docker compose
     success "环境检查通过"
 }
 
@@ -87,14 +87,14 @@ build() {
 docker_build() {
     info "开始构建 Docker 镜像..."
     # 构建镜像，使用最新的 classes 和 lib
-    docker-compose -f "$COMPOSE_FILE" build
+    docker compose -f "$COMPOSE_FILE" build
     success "Docker 镜像构建完成"
 }
 
 # 启动服务
 up() {
     info "启动 Dubbo 服务..."
-    docker-compose -f "$COMPOSE_FILE" up -d
+    docker compose -f "$COMPOSE_FILE" up -d
     success "服务已启动"
     info "等待服务初始化..."
     sleep 5
@@ -104,14 +104,14 @@ up() {
 # 停止服务
 down() {
     info "停止 Dubbo 服务..."
-    docker-compose -f "$COMPOSE_FILE" down
+    docker compose -f "$COMPOSE_FILE" down
     success "服务已停止"
 }
 
 # 重启服务
 restart() {
     info "重启 Dubbo 服务..."
-    docker-compose -f "$COMPOSE_FILE" restart
+    docker compose -f "$COMPOSE_FILE" restart
     success "服务已重启"
     info "等待服务初始化..."
     sleep 5
@@ -121,15 +121,15 @@ restart() {
 # 查看日志
 logs() {
     info "查看服务日志 (按 Ctrl+C 退出)..."
-    docker-compose -f "$COMPOSE_FILE" logs -f "$SERVICE_NAME"
+    docker compose -f "$COMPOSE_FILE" logs -f "$SERVICE_NAME"
 }
 
 # 查看状态
 status() {
     info "查看服务状态..."
-    docker-compose -f "$COMPOSE_FILE" ps
+    docker compose -f "$COMPOSE_FILE" ps
     
-    if docker-compose -f "$COMPOSE_FILE" ps | grep -q "Up"; then
+    if docker compose -f "$COMPOSE_FILE" ps | grep -q "Up"; then
         success "服务运行正常"
     else
         warn "服务可能未正常运行，请检查日志"
@@ -150,7 +150,7 @@ deploy() {
 clean() {
     info "清理构建产物..."
     mvn clean
-    docker-compose -f "$COMPOSE_FILE" down -v --rmi local 2>/dev/null || true
+    docker compose -f "$COMPOSE_FILE" down -v --rmi local 2>/dev/null || true
     success "清理完成"
 }
 
