@@ -42,18 +42,15 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         userDTO.setUsername(user.username());
         userDTO.setEmail(user.email());
         userDTO.setPhone(user.phone());
-        userDTO.setStatus(user.status());
-        userDTO.setCreatedAt(user.createdAt());
-        userDTO.setUpdatedAt(user.updatedAt());
+        // 设置默认状态
+        userDTO.setStatus((byte) 1);
+        // 不设置 createdAt 和 updatedAt，让数据库使用默认值
         userDTOMapper.insert(userDTO);
         return new User(
             userDTO.getId(),
             userDTO.getUsername(),
             userDTO.getEmail(),
-            userDTO.getPhone(),
-            userDTO.getStatus(),
-            userDTO.getCreatedAt(),
-            userDTO.getUpdatedAt()
+            userDTO.getPhone()
         );
     }
 
@@ -67,35 +64,38 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
             userDTO.getId(),
             userDTO.getUsername(),
             userDTO.getEmail(),
-            userDTO.getPhone(),
-            userDTO.getStatus(),
-            userDTO.getCreatedAt(),
-            userDTO.getUpdatedAt()
+            userDTO.getPhone()
         );
     }
 
     @Override
     public User updateUser(User user) {
+        // 先查询现有记录以获取完整信息
+        UserDTO existingUserDTO = userDTOMapper.selectByPrimaryKey(user.id());
+        if (existingUserDTO == null) {
+            return null;
+        }
+        
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.id());
         userDTO.setUsername(user.username());
         userDTO.setEmail(user.email());
         userDTO.setPhone(user.phone());
-        userDTO.setStatus(user.status());
-        userDTO.setCreatedAt(user.createdAt());
-        userDTO.setUpdatedAt(user.updatedAt());
-        int updated = userDTOMapper.updateByPrimaryKey(userDTO);
+        // 保持 status 不变
+        userDTO.setStatus(existingUserDTO.getStatus());
+        // 只更新 updatedAt，保持 createdAt 不变
+        
+        int updated = userDTOMapper.updateByPrimaryKeySelective(userDTO);
         if (updated == 0) {
             return null;
         }
+        // 重新查询以获取完整的记录
+        UserDTO updatedUserDTO = userDTOMapper.selectByPrimaryKey(user.id());
         return new User(
-            userDTO.getId(),
-            userDTO.getUsername(),
-            userDTO.getEmail(),
-            userDTO.getPhone(),
-            userDTO.getStatus(),
-            userDTO.getCreatedAt(),
-            userDTO.getUpdatedAt()
+            updatedUserDTO.getId(),
+            updatedUserDTO.getUsername(),
+            updatedUserDTO.getEmail(),
+            updatedUserDTO.getPhone()
         );
     }
 
@@ -112,10 +112,7 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
                     userDTO.getId(),
                     userDTO.getUsername(),
                     userDTO.getEmail(),
-                    userDTO.getPhone(),
-                    userDTO.getStatus(),
-                    userDTO.getCreatedAt(),
-                    userDTO.getUpdatedAt()
+                    userDTO.getPhone()
                 ))
                 .collect(Collectors.toList());
     }
@@ -130,9 +127,9 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         productDTO.setPrice(product.price());
         productDTO.setStock(product.stock());
         productDTO.setCategory(product.category());
-        productDTO.setIsDeleted(product.isDeleted());
-        productDTO.setCreatedAt(product.createdAt());
-        productDTO.setUpdatedAt(product.updatedAt());
+        // 设置默认值
+        productDTO.setIsDeleted((byte) 0);
+        // 不设置 createdAt 和 updatedAt，让数据库使用默认值
         productDTOMapper.insert(productDTO);
         return new Product(
             productDTO.getId(),
@@ -140,10 +137,7 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
             productDTO.getProductName(),
             productDTO.getPrice(),
             productDTO.getStock(),
-            productDTO.getCategory(),
-            productDTO.getIsDeleted(),
-            productDTO.getCreatedAt(),
-            productDTO.getUpdatedAt()
+            productDTO.getCategory()
         );
     }
 
@@ -159,15 +153,18 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
             productDTO.getProductName(),
             productDTO.getPrice(),
             productDTO.getStock(),
-            productDTO.getCategory(),
-            productDTO.getIsDeleted(),
-            productDTO.getCreatedAt(),
-            productDTO.getUpdatedAt()
+            productDTO.getCategory()
         );
     }
 
     @Override
     public Product updateProduct(Product product) {
+        // 先查询现有记录以获取完整信息
+        ProductDTO existingProductDTO = productDTOMapper.selectByPrimaryKey(product.id());
+        if (existingProductDTO == null) {
+            return null;
+        }
+        
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.id());
         productDTO.setProductCode(product.productCode());
@@ -175,23 +172,23 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         productDTO.setPrice(product.price());
         productDTO.setStock(product.stock());
         productDTO.setCategory(product.category());
-        productDTO.setIsDeleted(product.isDeleted());
-        productDTO.setCreatedAt(product.createdAt());
-        productDTO.setUpdatedAt(product.updatedAt());
-        int updated = productDTOMapper.updateByPrimaryKey(productDTO);
+        // 保持 isDeleted 不变
+        productDTO.setIsDeleted(existingProductDTO.getIsDeleted());
+        // 只更新 updatedAt，保持 createdAt 不变
+        
+        int updated = productDTOMapper.updateByPrimaryKeySelective(productDTO);
         if (updated == 0) {
             return null;
         }
+        // 重新查询以获取完整的记录
+        ProductDTO updatedProductDTO = productDTOMapper.selectByPrimaryKey(product.id());
         return new Product(
-            productDTO.getId(),
-            productDTO.getProductCode(),
-            productDTO.getProductName(),
-            productDTO.getPrice(),
-            productDTO.getStock(),
-            productDTO.getCategory(),
-            productDTO.getIsDeleted(),
-            productDTO.getCreatedAt(),
-            productDTO.getUpdatedAt()
+            updatedProductDTO.getId(),
+            updatedProductDTO.getProductCode(),
+            updatedProductDTO.getProductName(),
+            updatedProductDTO.getPrice(),
+            updatedProductDTO.getStock(),
+            updatedProductDTO.getCategory()
         );
     }
 
@@ -210,10 +207,7 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
                     productDTO.getProductName(),
                     productDTO.getPrice(),
                     productDTO.getStock(),
-                    productDTO.getCategory(),
-                    productDTO.getIsDeleted(),
-                    productDTO.getCreatedAt(),
-                    productDTO.getUpdatedAt()
+                    productDTO.getCategory()
                 ))
                 .collect(Collectors.toList());
     }
@@ -228,8 +222,7 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         orderDTO.setAmount(order.amount());
         orderDTO.setStatus(order.status());
         orderDTO.setRemark(order.remark());
-        orderDTO.setCreatedAt(order.createdAt());
-        orderDTO.setUpdatedAt(order.updatedAt());
+        // 不设置 createdAt 和 updatedAt，让数据库使用默认值
         orderDTOMapper.insert(orderDTO);
         return new Order(
             orderDTO.getId(),
@@ -237,9 +230,7 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
             orderDTO.getUserId(),
             orderDTO.getAmount(),
             orderDTO.getStatus(),
-            orderDTO.getRemark(),
-            orderDTO.getCreatedAt(),
-            orderDTO.getUpdatedAt()
+            orderDTO.getRemark()
         );
     }
 
@@ -255,14 +246,18 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
             orderDTO.getUserId(),
             orderDTO.getAmount(),
             orderDTO.getStatus(),
-            orderDTO.getRemark(),
-            orderDTO.getCreatedAt(),
-            orderDTO.getUpdatedAt()
+            orderDTO.getRemark()
         );
     }
 
     @Override
     public Order updateOrder(Order order) {
+        // 先查询现有记录以获取完整信息
+        OrderDTO existingOrderDTO = orderDTOMapper.selectByPrimaryKey(order.id());
+        if (existingOrderDTO == null) {
+            return null;
+        }
+        
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.id());
         orderDTO.setOrderNo(order.orderNo());
@@ -270,21 +265,21 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         orderDTO.setAmount(order.amount());
         orderDTO.setStatus(order.status());
         orderDTO.setRemark(order.remark());
-        orderDTO.setCreatedAt(order.createdAt());
-        orderDTO.setUpdatedAt(order.updatedAt());
-        int updated = orderDTOMapper.updateByPrimaryKey(orderDTO);
+        // 只更新 updatedAt，保持 createdAt 不变
+        
+        int updated = orderDTOMapper.updateByPrimaryKeySelective(orderDTO);
         if (updated == 0) {
             return null;
         }
+        // 重新查询以获取完整的记录
+        OrderDTO updatedOrderDTO = orderDTOMapper.selectByPrimaryKey(order.id());
         return new Order(
-            orderDTO.getId(),
-            orderDTO.getOrderNo(),
-            orderDTO.getUserId(),
-            orderDTO.getAmount(),
-            orderDTO.getStatus(),
-            orderDTO.getRemark(),
-            orderDTO.getCreatedAt(),
-            orderDTO.getUpdatedAt()
+            updatedOrderDTO.getId(),
+            updatedOrderDTO.getOrderNo(),
+            updatedOrderDTO.getUserId(),
+            updatedOrderDTO.getAmount(),
+            updatedOrderDTO.getStatus(),
+            updatedOrderDTO.getRemark()
         );
     }
 
@@ -303,9 +298,7 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
                     orderDTO.getUserId(),
                     orderDTO.getAmount(),
                     orderDTO.getStatus(),
-                    orderDTO.getRemark(),
-                    orderDTO.getCreatedAt(),
-                    orderDTO.getUpdatedAt()
+                    orderDTO.getRemark()
                 ))
                 .collect(Collectors.toList());
     }

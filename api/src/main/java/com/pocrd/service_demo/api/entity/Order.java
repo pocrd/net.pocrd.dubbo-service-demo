@@ -2,7 +2,6 @@ package com.pocrd.service_demo.api.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Order entity for API layer
@@ -13,9 +12,7 @@ public record Order(
     Long userId,
     BigDecimal amount,
     Byte status,
-    String remark,
-    Date createdAt,
-    Date updatedAt
+    String remark
 ) implements Serializable {
     private static final long serialVersionUID = 1L;
 }
