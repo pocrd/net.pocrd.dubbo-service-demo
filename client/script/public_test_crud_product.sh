@@ -41,7 +41,7 @@ echo "测试 1/5: createProduct 接口"
 echo "----------------------------------------------"
 
 TIMESTAMP=$(date +%s)
-CREATE_PRODUCT_BODY='{"productCode":"PROD_'${TIMESTAMP}'","productName":"Test Product '${TIMESTAMP}'","price":99.99,"stock":100,"category":"Electronics","isDeleted":0}'
+CREATE_PRODUCT_BODY="{\"productCode\":\"PROD_${TIMESTAMP}\",\"productName\":\"Test Product ${TIMESTAMP}\",\"price\":99.99,\"stock\":100,\"category\":\"Electronics\"}"
 echo "请求体：$CREATE_PRODUCT_BODY"
 
 RESPONSE_BODY=$(curl -s --max-time $MAX_TIME -X POST \
