@@ -44,8 +44,8 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         userDTO.setPhone(user.phone());
         // 设置默认状态
         userDTO.setStatus((byte) 1);
-        // 不设置 createdAt 和 updatedAt，让数据库使用默认值
-        userDTOMapper.insert(userDTO);
+        // 使用 insertSelective，不设置 createdAt 和 updatedAt，让数据库使用默认值
+        userDTOMapper.insertSelective(userDTO);
         return new User(
             userDTO.getId(),
             userDTO.getUsername(),
@@ -70,26 +70,19 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
 
     @Override
     public User updateUser(User user) {
-        // 先查询现有记录以获取完整信息
-        UserDTO existingUserDTO = userDTOMapper.selectByPrimaryKey(user.id());
-        if (existingUserDTO == null) {
-            return null;
-        }
-        
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.id());
         userDTO.setUsername(user.username());
         userDTO.setEmail(user.email());
         userDTO.setPhone(user.phone());
-        // 保持 status 不变
-        userDTO.setStatus(existingUserDTO.getStatus());
-        // 只更新 updatedAt，保持 createdAt 不变
+        // status 字段不更新（保持原有值）
+        // createdAt 和 updatedAt 字段不设置，让数据库处理
         
         int updated = userDTOMapper.updateByPrimaryKeySelective(userDTO);
         if (updated == 0) {
             return null;
         }
-        // 重新查询以获取完整的记录
+        // 查询更新后的记录
         UserDTO updatedUserDTO = userDTOMapper.selectByPrimaryKey(user.id());
         return new User(
             updatedUserDTO.getId(),
@@ -129,8 +122,8 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         productDTO.setCategory(product.category());
         // 设置默认值
         productDTO.setIsDeleted((byte) 0);
-        // 不设置 createdAt 和 updatedAt，让数据库使用默认值
-        productDTOMapper.insert(productDTO);
+        // 使用 insertSelective，不设置 createdAt 和 updatedAt，让数据库使用默认值
+        productDTOMapper.insertSelective(productDTO);
         return new Product(
             productDTO.getId(),
             productDTO.getProductCode(),
@@ -159,12 +152,6 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
 
     @Override
     public Product updateProduct(Product product) {
-        // 先查询现有记录以获取完整信息
-        ProductDTO existingProductDTO = productDTOMapper.selectByPrimaryKey(product.id());
-        if (existingProductDTO == null) {
-            return null;
-        }
-        
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.id());
         productDTO.setProductCode(product.productCode());
@@ -172,15 +159,14 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         productDTO.setPrice(product.price());
         productDTO.setStock(product.stock());
         productDTO.setCategory(product.category());
-        // 保持 isDeleted 不变
-        productDTO.setIsDeleted(existingProductDTO.getIsDeleted());
-        // 只更新 updatedAt，保持 createdAt 不变
+        // isDeleted 字段不更新（保持原有值）
+        // createdAt 和 updatedAt 字段不设置，让数据库处理
         
         int updated = productDTOMapper.updateByPrimaryKeySelective(productDTO);
         if (updated == 0) {
             return null;
         }
-        // 重新查询以获取完整的记录
+        // 查询更新后的记录
         ProductDTO updatedProductDTO = productDTOMapper.selectByPrimaryKey(product.id());
         return new Product(
             updatedProductDTO.getId(),
@@ -222,8 +208,8 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         orderDTO.setAmount(order.amount());
         orderDTO.setStatus(order.status());
         orderDTO.setRemark(order.remark());
-        // 不设置 createdAt 和 updatedAt，让数据库使用默认值
-        orderDTOMapper.insert(orderDTO);
+        // 使用 insertSelective，不设置 createdAt 和 updatedAt，让数据库使用默认值
+        orderDTOMapper.insertSelective(orderDTO);
         return new Order(
             orderDTO.getId(),
             orderDTO.getOrderNo(),
@@ -252,12 +238,6 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
 
     @Override
     public Order updateOrder(Order order) {
-        // 先查询现有记录以获取完整信息
-        OrderDTO existingOrderDTO = orderDTOMapper.selectByPrimaryKey(order.id());
-        if (existingOrderDTO == null) {
-            return null;
-        }
-        
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.id());
         orderDTO.setOrderNo(order.orderNo());
@@ -265,13 +245,13 @@ public class CRUDServiceHttpExportImpl implements CRUDServiceHttpExport {
         orderDTO.setAmount(order.amount());
         orderDTO.setStatus(order.status());
         orderDTO.setRemark(order.remark());
-        // 只更新 updatedAt，保持 createdAt 不变
+        // createdAt 和 updatedAt 字段不设置，让数据库处理
         
         int updated = orderDTOMapper.updateByPrimaryKeySelective(orderDTO);
         if (updated == 0) {
             return null;
         }
-        // 重新查询以获取完整的记录
+        // 查询更新后的记录
         OrderDTO updatedOrderDTO = orderDTOMapper.selectByPrimaryKey(order.id());
         return new Order(
             updatedOrderDTO.getId(),
