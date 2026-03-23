@@ -13,11 +13,11 @@ services:
       - DUBBO_CONFIG_CENTER=nacos://172.24.137.195:30848
       - DUBBO_METADATA_REPORT_ADDRESS=nacos://172.24.137.195:30848
       # MySQL database configuration
-      - MYSQL_HOST=mysql
+      - MYSQL_HOST=rm-bp1i047rt28fajm69.mysql.rds.aliyuncs.com
       - MYSQL_PORT=3306
-      - MYSQL_DATABASE=service_demo
+      - MYSQL_DATABASE=demo
       - MYSQL_USERNAME=demo
-      - MYSQL_PASSWORD=demo123
+      - MYSQL_PASSWORD=Ktk$8zj&$7zf4w-
     restart: unless-stopped
     deploy:
       resources:
