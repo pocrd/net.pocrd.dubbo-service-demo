@@ -7,11 +7,11 @@
 
     <parent>
         <groupId>com.pocrd</groupId>
-        <artifactId>service-demo</artifactId>
+        <artifactId>dubbo-demo</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>service-demo-client</artifactId>
+    <artifactId>dubbo-demo-client</artifactId>
     <packaging>pom</packaging>
 
     <name>Service Demo Client</name>
@@ -22,31 +22,17 @@
         <dubbo.url>dubbo://localhost:50052?serialization=fury</dubbo.url>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- Spring Boot BOM - 用于统一管理日志等依赖版本 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <!-- API 模块 - 必须依赖 -->
         <dependency>
             <groupId>com.pocrd</groupId>
-            <artifactId>service-demo-api</artifactId>
+            <artifactId>dubbo-demo-api</artifactId>
         </dependency>
 
         <!-- Dubbo Triple 协议支持（用于 HTTP 模式） -->
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-rpc-triple</artifactId>
-            <version>${dubbo.version}</version>
         </dependency>
 
         <!-- Fory serialization for JDK Record support -->

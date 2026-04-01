@@ -11,4 +11,4 @@ EXPOSE 50051
 EXPOSE 50052
 
 # 使用 classpath 方式启动
-ENTRYPOINT ["java", "-cp", "classes:lib/*", "com.pocrd.service_demo.service.ServiceDemoApplication"]
+ENTRYPOINT ["java", "-cp", "classes:lib/*", "com.pocrd.dubbo_demo.service.ServiceDemoApplication"]

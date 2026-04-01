@@ -14,7 +14,7 @@ client/
 ├── pom.xml                              # Maven 配置
 ├── README.md                            # 使用说明
 └── src/test/
-    ├── java/com/pocrd/service_demo/client/
+    ├── java/com/pocrd/dubbo_demo/client/
     │   ├── TestConfigManager.java       # 测试配置管理器
     │   ├── HttpClientUtils.java         # HTTP 客户端工具
     │   └── GreeterServiceTest.java      # 示例测试用例

@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pocrd</groupId>
-    <artifactId>service-demo</artifactId>
+    <artifactId>dubbo-demo</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
@@ -34,6 +34,13 @@
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <mysql-connector.version>8.0.33</mysql-connector.version>
         <api-publish-service-sdk.version>1.0.0</api-publish-service-sdk.version>
+        
+        <!-- Maven Plugin Versions -->
+        <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <mybatis-generator.version>1.4.2</mybatis-generator.version>
+        <mybatis-spring-boot.version>3.0.3</mybatis-spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -86,8 +93,8 @@
             
             <!-- MySQL Connector -->
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector.version}</version>
             </dependency>
             
@@ -98,20 +105,32 @@
                 <version>${api-publish-service-sdk.version}</version>
             </dependency>
             
+            <!-- MyBatis -->
+            <dependency>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-core</artifactId>
+                <version>${mybatis-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot.version}</version>
+            </dependency>
+            
             <!-- Service Demo Modules -->
             <dependency>
                 <groupId>com.pocrd</groupId>
-                <artifactId>service-demo-api</artifactId>
+                <artifactId>dubbo-demo-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.pocrd</groupId>
-                <artifactId>service-demo-dao</artifactId>
+                <artifactId>dubbo-demo-dao</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.pocrd</groupId>
-                <artifactId>service-demo-service</artifactId>
+                <artifactId>dubbo-demo-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -147,6 +166,21 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

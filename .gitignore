@@ -1,9 +1,12 @@
 .aider*
 .mvn
 .env
+.env.prod
+.env.test
 .tool-versions
 .qoder
 .vscode/
 target/
 **/dependency-reduced-pom.xml
 *.key
+.DS_Store

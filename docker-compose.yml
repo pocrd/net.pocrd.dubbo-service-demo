@@ -1,24 +1,20 @@
+# Docker Compose 基础配置
+# 环境特定配置位于 docker-compose.{env}.yml 文件中
+# 使用方式: ./deploy.sh [prod|test] [command]
+
 services:
   dubbo-service:
     build:
       context: .
       dockerfile: Dockerfile
-    image: service-demo-dubbo-service
+    image: dubbo-demo-service
     container_name: dubbo-demo-service
     ports:
       - "50051:50051"
       - "50052:50052"
     environment:
-      - DUBBO_REGISTRY_ADDRESS=nacos://172.24.137.195:30848
-      - DUBBO_CONFIG_CENTER=nacos://172.24.137.195:30848
-      - DUBBO_METADATA_REPORT_ADDRESS=nacos://172.24.137.195:30848
+      # DUBBO_IP_TO_REGISTRY 由 deploy.sh 动态设置
       - DUBBO_IP_TO_REGISTRY
-      # MySQL database configuration
-      - MYSQL_HOST=rm-bp1i047rt28fajm69.mysql.rds.aliyuncs.com
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=demo
-      - MYSQL_USERNAME=demo
-      - MYSQL_PASSWORD=Ktk$8zj&$7zf4w-
     restart: unless-stopped
     deploy:
       resources:

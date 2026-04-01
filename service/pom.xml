@@ -7,11 +7,11 @@
 
     <parent>
         <groupId>com.pocrd</groupId>
-        <artifactId>service-demo</artifactId>
+        <artifactId>dubbo-demo</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>service-demo-service</artifactId>
+    <artifactId>dubbo-demo-service</artifactId>
     <packaging>jar</packaging>
 
     <name>Service Demo Service</name>
@@ -21,7 +21,7 @@
 
         <dependency>
             <groupId>com.pocrd</groupId>
-            <artifactId>service-demo-api</artifactId>
+            <artifactId>dubbo-demo-api</artifactId>
         </dependency>
 
         <!-- Spring Boot Starter -->
@@ -44,7 +44,6 @@
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-rpc-triple</artifactId>
-            <version>${dubbo.version}</version>
         </dependency>
         
         <!-- Fury serialization for JDK Record support -->
@@ -67,7 +66,7 @@
         <!-- DAO dependency -->
         <dependency>
             <groupId>com.pocrd</groupId>
-            <artifactId>service-demo-dao</artifactId>
+            <artifactId>dubbo-demo-dao</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -93,7 +92,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.pocrd.service_demo.service.ServiceDemoApplication</mainClass>
+                            <mainClass>com.pocrd.dubbo_demo.service.ServiceDemoApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

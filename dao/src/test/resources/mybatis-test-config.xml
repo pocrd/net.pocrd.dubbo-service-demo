@@ -13,7 +13,7 @@
     
     <!-- 类型别名 -->
     <typeAliases>
-        <package name="com.pocrd.service_demo.dao.autogen.entity"/>
+        <package name="com.pocrd.dubbo_demo.dao.autogen.entity"/>
     </typeAliases>
     
     <!-- 环境配置 -->
@@ -22,7 +22,7 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/service_demo?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/dubbo_demo?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true"/>
                 <property name="username" value="root"/>
                 <property name="password" value="root123"/>
             </dataSource>

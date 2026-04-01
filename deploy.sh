@@ -38,6 +38,32 @@ cd "$SCRIPT_DIR"
 SERVICE_NAME="dubbo-demo-service"
 COMPOSE_FILE="docker-compose.yml"
 
+# 强制模式标志（跳过 API 检查）
+FORCE_MODE=false
+
+# 验证环境参数
+validate_env() {
+    case "$ENV" in
+        prod|test)
+            if [[ ! -f "$COMPOSE_ENV_FILE" ]]; then
+                error "环境配置文件不存在: $COMPOSE_ENV_FILE"
+                exit 1
+            fi
+            if [[ ! -f ".env.${ENV}" ]]; then
+                error "环境变量文件不存在: .env.${ENV}"
+                error "请复制 .env.example 为 .env.${ENV} 并填写实际配置"
+                exit 1
+            fi
+            info "使用环境: $ENV"
+            ;;
+        *)
+            error "未知环境: $ENV"
+            error "支持的环境: prod, test"
+            exit 1
+            ;;
+    esac
+}
+
 # 获取宿主机IP地址
 get_host_ip() {
     # macOS 和 Linux 兼容的方式获取IP
@@ -89,11 +115,70 @@ check_env() {
     success "环境检查通过"
 }
 
+# 检查 API 元数据
+api_check() {
+    info "检查 API 元数据..."
+    
+    API_BASE_NAME="${SERVICE_NAME%-service}"
+    API_JAR_PATTERN="api/target/${API_BASE_NAME}-api-*.jar"
+    API_JAR=$(ls $API_JAR_PATTERN 2>/dev/null | grep -v "sources" | grep -v "javadoc" | head -1)
+    
+    if [ -z "$API_JAR" ] || [ ! -f "$API_JAR" ]; then
+        error "API jar 文件不存在: $API_JAR_PATTERN"
+        error "请先执行 ./deploy.sh build 进行编译"
+        exit 1
+    fi
+    
+    info "使用 API jar: $(basename $API_JAR)"
+    
+    # 查找 SDK jar - 从 service 的 lib 目录中查找（作为依赖引入）
+    SDK_JAR_PATTERN="service/target/lib/api-publish-service-sdk-*.jar"
+    SDK_JAR=$(ls $SDK_JAR_PATTERN 2>/dev/null | head -1)
+    
+    if [ -z "$SDK_JAR" ] || [ ! -f "$SDK_JAR" ]; then
+        error "SDK jar 文件不存在: $SDK_JAR_PATTERN"
+        error "请确保 service 模块已正确编译，SDK 作为依赖被复制到 lib 目录"
+        exit 1
+    fi
+    
+    info "使用 SDK jar: $(basename $SDK_JAR)"
+    
+    # 运行 ApiMetadataValidator 检查
+    info "运行 ApiMetadataValidator 检查 API 接口..."
+    
+    # 构建 classpath（SDK jar + API jar + service 的所有依赖）
+    CP="$SDK_JAR:$API_JAR"
+    
+    # 添加 service 的所有依赖
+    if [ -d "service/target/lib" ]; then
+        for lib in service/target/lib/*.jar; do
+            if [ -f "$lib" ]; then
+                CP="$CP:$lib"
+            fi
+        done
+    fi
+    
+    # 执行检查
+    if ! API_PUBLISH_SERVICE_NAME="$SERVICE_NAME" java -cp "$CP" com.pocrd.api_publish_service.sdk.util.ApiMetadataValidator "$API_JAR"; then
+        if [ "$FORCE_MODE" = true ]; then
+            warn "API 元数据检查失败，但强制模式已启用，继续部署..."
+        else
+            error "API 元数据检查失败，请修复上述问题后再部署"
+            exit 1
+        fi
+    else
+        success "API 元数据检查通过"
+    fi
+}
+
 # 本地编译
 build() {
     info "开始 Maven 编译打包..."
     mvn clean package -pl service -am -DskipTests -B
     success "编译完成"
+
+    # 编译完成后检查 API 元数据
+    api_check
 }
 
 # 构建 Docker 镜像
@@ -110,7 +195,7 @@ up() {
     # 动态获取宿主机IP并设置环境变量
     HOST_IP=$(get_host_ip)
     info "检测到宿主机IP: $HOST_IP"
-    DUBBO_IP_TO_REGISTRY="$HOST_IP" docker compose -f "$COMPOSE_FILE" up -d 
+    DUBBO_IP_TO_REGISTRY="$HOST_IP" docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" up -d 
     success "服务已启动"
     info "等待服务初始化..."
     sleep 5
@@ -120,7 +205,7 @@ up() {
 # 停止服务
 down() {
     info "停止 Dubbo 服务..."
-    docker compose -f "$COMPOSE_FILE" down
+    docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" down
     success "服务已停止"
 }
 
@@ -130,7 +215,9 @@ restart() {
     # 动态获取宿主机IP并设置环境变量
     HOST_IP=$(get_host_ip)
     info "检测到宿主机IP: $HOST_IP"
-    DUBBO_IP_TO_REGISTRY="$HOST_IP" docker compose -f "$COMPOSE_FILE" restart
+    # 使用 down + up 重新加载环境变量配置
+    docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" down
+    DUBBO_IP_TO_REGISTRY="$HOST_IP" docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" up -d
     success "服务已重启"
     info "等待服务初始化..."
     sleep 5
@@ -140,15 +227,15 @@ restart() {
 # 查看日志
 logs() {
     info "查看服务日志 (按 Ctrl+C 退出)..."
-    docker compose -f "$COMPOSE_FILE" logs -f "$SERVICE_NAME"
+    docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" logs -f "$SERVICE_NAME"
 }
 
 # 查看状态
 status() {
     info "查看服务状态..."
-    docker compose -f "$COMPOSE_FILE" ps
+    docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" ps
     
-    if docker compose -f "$COMPOSE_FILE" ps | grep -q "Up"; then
+    if docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" ps | grep -q "Up"; then
         success "服务运行正常"
     else
         warn "服务可能未正常运行，请检查日志"
@@ -169,7 +256,7 @@ deploy() {
 clean() {
     info "清理构建产物..."
     mvn clean
-    docker compose -f "$COMPOSE_FILE" down -v --rmi local 2>/dev/null || true
+    docker compose -f "$COMPOSE_FILE" -f "$COMPOSE_ENV_FILE" down -v --rmi local 2>/dev/null || true
     success "清理完成"
 }
 
@@ -178,7 +265,12 @@ usage() {
     echo "Dubbo 微服务部署脚本"
     echo ""
     echo "Usage:"
-    echo "  ./deploy.sh [command]"
+    echo "  ./deploy.sh [env] [command]"
+    echo "  ./deploy.sh [command]        # 默认使用 prod 环境"
+    echo ""
+    echo "Environments:"
+    echo "  prod        生产环境 (默认)"
+    echo "  test        测试环境"
     echo ""
     echo "Commands:"
     echo "  build       本地 Maven 编译打包"
@@ -193,16 +285,47 @@ usage() {
     echo "  help        显示使用说明"
     echo ""
     echo "Examples:"
-    echo "  ./deploy.sh deploy      # 首次完整部署"
-    echo "  ./deploy.sh restart     # 修改代码后重启"
-    echo "  ./deploy.sh logs        # 查看运行日志"
+    echo "  ./deploy.sh prod deploy      # 生产环境完整部署"
+    echo "  ./deploy.sh test deploy      # 测试环境完整部署"
+    echo "  ./deploy.sh prod up          # 启动生产环境服务"
+    echo "  ./deploy.sh test up          # 启动测试环境服务"
+    echo "  ./deploy.sh prod restart     # 重启生产环境服务"
+    echo "  ./deploy.sh prod logs        # 查看生产环境日志"
 }
 
+# 解析参数
+# 支持格式: ./deploy.sh [env] [command] [-force] 或 ./deploy.sh [command] [-force]
+ENV="${1:-prod}"
+COMMAND="${2:-deploy}"
+FORCE_ARG="${3:-}"
+
+# 如果第一个参数是命令而不是环境，则调整参数
+if [[ "$ENV" =~ ^(build|docker|up|down|restart|logs|status|deploy|clean|help|--help|-h)$ ]]; then
+    COMMAND="$ENV"
+    ENV="prod"
+    FORCE_ARG="${2:-}"
+fi
+
+# 处理 -force 参数
+if [[ "$FORCE_ARG" == "-force" ]]; then
+    FORCE_MODE=true
+fi
+
+# 设置环境配置文件
+COMPOSE_ENV_FILE="docker-compose.${ENV}.yml"
+
+# 验证环境
+validate_env
+
 # 主逻辑
-case "${1:-deploy}" in
+case "$COMMAND" in
     build)
         check_env
         build
+        ;;
+    api-check)
+        check_env
+        api_check
         ;;
     docker)
         check_env
@@ -226,7 +349,12 @@ case "${1:-deploy}" in
         status
         ;;
     deploy)
-        deploy
+        check_env
+        info "开始完整部署流程..."
+        build
+        docker_build
+        up
+        success "部署完成！"
         ;;
     clean)
         clean
@@ -235,7 +363,7 @@ case "${1:-deploy}" in
         usage
         ;;
     *)
-        error "未知命令: $1"
+        error "未知命令: $COMMAND"
         usage
         exit 1
         ;;

@@ -9,7 +9,7 @@
 set -e
 
 BASE_URL="https://api.caringfamily.cn"
-SERVICE_PATH="/dapi/com.pocrd.service_demo.api.CRUDServiceHttpExport"
+SERVICE_PATH="/dapi/com.pocrd.dubbo_demo.api.CRUDServiceHttpExport"
 
 # 证书路径
 CERT_DIR="../certs"
