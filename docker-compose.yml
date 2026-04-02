@@ -1,7 +1,3 @@
-# Docker Compose 基础配置
-# 环境特定配置位于 docker-compose.{env}.yml 文件中
-# 使用方式: ./deploy.sh [prod|test] [command]
-
 services:
   dubbo-service:
     build:
@@ -13,13 +9,18 @@ services:
       - "50051:50051"
       - "50052:50052"
     environment:
-      # DUBBO_IP_TO_REGISTRY 由 deploy.sh 动态设置
       - DUBBO_IP_TO_REGISTRY
     restart: unless-stopped
+    volumes:
+      - maven-repo:/root/.m2
+
+volumes:
+  maven-repo:
+    driver: local
+
     deploy:
       resources:
         limits:
           memory: 1G
         reservations:
           memory: 512M
-
